@@ -12,6 +12,7 @@ public class UserViewModel extends ViewModel {
     private LiveData<User> userData;
 
     public UserViewModel() {
+        //
         userRepository = new UserRepository();
         userData = userRepository.getUserData();
     }
