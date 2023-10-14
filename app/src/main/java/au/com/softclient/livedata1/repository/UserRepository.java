@@ -26,6 +26,33 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 
+// UserRepository.java
+//package com.yourpackage.repository;
+
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+
+//import com.yourpackage.models.User;
+
+public class UserRepository {
+
+    private MutableLiveData<User> userLiveData;
+
+    public LiveData<User> getUserData(int userId) {
+        // Simulate an API call to fetch user data
+        if (userLiveData == null) {
+            userLiveData = new MutableLiveData<>();
+            // Replace this with your actual API call
+            // For example, you can use Retrofit or any other networking library
+            User user = new User(1, "John Doe", "johndoe@example.com");
+            userLiveData.setValue(user);
+        }
+        return userLiveData;
+    }
+}
+
+
+/*
 public class UserRepository {
 
     private MutableLiveData<User> userData = new MutableLiveData<>();
@@ -73,9 +100,11 @@ public class UserRepository {
                 userData.postValue(new User(1, "Fail", "fail@gmail.com"));
             }
         });
-    */
+
     }
 }
+
+ */
 
 
 /*

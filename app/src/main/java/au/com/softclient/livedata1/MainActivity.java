@@ -34,6 +34,51 @@ import au.com.softclient.livedata1.databinding.ActivityMainBinding;
 import au.com.softclient.livedata1.models.User;
 import au.com.softclient.livedata1.viewmodels.UserViewModel;
 
+
+
+// MainActivity.java
+//package com.yourpackage;
+
+import android.os.Bundle;
+import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.Observer;
+
+//import com.yourpackage.models.User;
+//import com.yourpackage.viewmodels.UserViewModel;
+
+public class MainActivity extends AppCompatActivity {
+
+    private UserViewModel userViewModel;
+    private TextView nameTextView;
+    private TextView emailTextView;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        nameTextView = findViewById(R.id.userNameTextView);
+        emailTextView = findViewById(R.id.userEmailTextView);
+
+        userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
+
+        // Observe LiveData for user data changes
+        userViewModel.getUserData(1).observe(this, new Observer<User>() {
+            @Override
+            public void onChanged(User user) {
+                if (user != null) {
+                    nameTextView.setText(user.getName());
+                    emailTextView.setText(user.getEmail());
+                }
+            }
+        });
+    }
+}
+
+
 /*
 public class MainActivity extends AppCompatActivity {
     private UserViewModel userViewModel;
@@ -62,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
 
 */
 
-/*
+/*I
 public class MainActivity extends AppCompatActivity {
     private UserViewModel userViewModel;
     private ActivityMainBinding binding;
@@ -88,7 +133,7 @@ public class MainActivity extends AppCompatActivity {
 }
 
 */
-
+/*
 public class MainActivity extends AppCompatActivity {
     private UserViewModel userViewModel;
     private ActivityMainBinding binding;
@@ -112,7 +157,7 @@ public class MainActivity extends AppCompatActivity {
         userViewModel.fetchUser(); // Fetch user data
     }
 }
-
+*/
 
 /*
 public class MainActivity extends AppCompatActivity {

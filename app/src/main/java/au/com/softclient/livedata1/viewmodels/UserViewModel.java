@@ -17,6 +17,21 @@ import au.com.softclient.livedata1.models.User;
 import au.com.softclient.livedata1.repository.UserRepository;
 
 public class UserViewModel extends ViewModel {
+
+    private UserRepository userRepository;
+
+    public UserViewModel() {
+        userRepository = new UserRepository();
+    }
+
+    public LiveData<User> getUserData(int userId) {
+        return userRepository.getUserData(userId);
+    }
+}
+
+
+/*
+public class UserViewModel extends ViewModel {
     private UserRepository userRepository;
     private LiveData<User> userData;
 
@@ -33,7 +48,7 @@ public class UserViewModel extends ViewModel {
         userRepository.fetchUser();
     }
 }
-
+*/
 
 /*
 public class UserViewModel extends ViewModel {
