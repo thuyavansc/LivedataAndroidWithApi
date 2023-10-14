@@ -13,6 +13,79 @@ import au.com.softclient.livedata1.databinding.ActivityMainBinding;
 import au.com.softclient.livedata1.models.User;
 import au.com.softclient.livedata1.viewmodels.UserViewModel;
 
+//package au.com.softclient.livedata1;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
+import android.os.Bundle;
+import au.com.softclient.livedata1.databinding.ActivityMainBinding;
+import au.com.softclient.livedata1.models.User;
+import au.com.softclient.livedata1.viewmodels.UserViewModel;
+
+
+//package au.com.softclient.livedata1;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
+import android.os.Bundle;
+import au.com.softclient.livedata1.databinding.ActivityMainBinding;
+import au.com.softclient.livedata1.models.User;
+import au.com.softclient.livedata1.viewmodels.UserViewModel;
+
+public class MainActivity extends AppCompatActivity {
+    private UserViewModel userViewModel;
+    private ActivityMainBinding binding;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+
+        userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
+
+        userViewModel.getUserData().observe(this, new Observer<User>() {
+            @Override
+            public void onChanged(User user) {
+                binding.userNameTextView.setText("User Name: " + user.getName());
+                binding.userEmailTextView.setText("User Email: " + user.getEmail());
+            }
+        });
+
+        userViewModel.fetchUser(); // Fetch user data for ID 1
+    }
+}
+
+
+/*
+public class MainActivity extends AppCompatActivity {
+    private UserViewModel userViewModel;
+    private ActivityMainBinding binding;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+
+        userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
+
+        userViewModel.getUserData().observe(this, new Observer<User>() {
+            @Override
+            public void onChanged(User user) {
+                binding.userNameTextView.setText("User Name: " + user.getName());
+                binding.userEmailTextView.setText("User Email: " + user.getEmail());
+            }
+        });
+
+        userViewModel.fetchUser(); // Fetch user data
+    }
+}
+
+
+/*
 public class MainActivity extends AppCompatActivity {
     private UserViewModel userViewModel;
     private ActivityMainBinding binding; // Declare the binding
@@ -39,3 +112,4 @@ public class MainActivity extends AppCompatActivity {
         userViewModel.fetchUser(); // Fetch user data
     }
 }
+*/
