@@ -1,5 +1,28 @@
 package au.com.softclient.livedata1.models;
 
+/*
+public class User {
+
+    private String name;
+    private String email;
+
+    public User(String name, String email) {
+
+        this.name = name;
+        this.email = email;
+    }
+
+
+    public String getName() {
+        return name;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+}
+*/
+
 public class User {
     private int id;
     private String name;
@@ -23,3 +46,4 @@ public class User {
         return email;
     }
 }
+

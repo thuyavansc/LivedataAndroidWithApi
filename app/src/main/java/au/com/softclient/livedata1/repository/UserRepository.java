@@ -25,6 +25,60 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+
+public class UserRepository {
+
+    private MutableLiveData<User> userData = new MutableLiveData<>();
+    private UserService userService;
+
+    public UserRepository() {
+        // Create a Retrofit instance with the base URL for user ID 1.
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://192.168.8.168:3000/api/users/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        userService = retrofit.create(UserService.class);
+    }
+
+    public LiveData<User> getUserData() {
+        return userData;
+    }
+
+    public void fetchUser() {
+        //User user = // Fetch user data.
+        User user =new User(1,"2John Doe ", "2johndoe@example.com");
+        // Make the API call to fetch user data for ID 1.
+        /*
+        Call<User> call = userService.getUser();
+        call.enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                if (response.isSuccessful()) {
+                    User user = response.body();
+                    if (user != null) {
+                        userData.postValue(user); // Update the LiveData with the new user data.
+                    } else {
+                        // Handle the case where the API returned data that doesn't match the expected structure.
+                        // You can set a default "fail" user here or handle it in another way.
+                        userData.postValue(new User(1, "Fail", "fail@gmail.com"));
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+                // Handle API call failure here
+                // Set a default "fail" user in case of failure.
+                userData.postValue(new User(1, "Fail", "fail@gmail.com"));
+            }
+        });
+    */
+    }
+}
+
+
+/*
 public class UserRepository {
     private MutableLiveData<User> userData = new MutableLiveData<>();
     private UserService userService;
@@ -76,7 +130,7 @@ public class UserRepository {
         });
     }
 }
-
+*/
 
 /*
 public class UserRepository {

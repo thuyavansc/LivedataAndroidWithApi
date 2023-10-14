@@ -53,6 +53,7 @@ public class UserViewModel extends ViewModel {
     public void fetchUser() {
         userRepository.fetchUser();
     }
+}
     /*
     private MutableLiveData<User> userData = new MutableLiveData<>();
 
@@ -65,6 +66,6 @@ public class UserViewModel extends ViewModel {
         User user = new User("John Doe", "johndoe@example.com");
         userData.setValue(user);
     }
-    */
 
 
+*/
