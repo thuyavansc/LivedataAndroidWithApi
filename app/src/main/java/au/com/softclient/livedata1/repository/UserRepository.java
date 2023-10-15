@@ -1,5 +1,7 @@
 package au.com.softclient.livedata1.repository;
 
+import android.util.Log;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
@@ -31,9 +33,345 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+import android.os.Handler;
+import android.os.Looper;
 
 //import com.yourpackage.models.User;
 
+// UserRepository.java
+
+public class UserRepository {
+
+    private UserService userService;
+    private final Handler mainHandler;
+
+    public UserRepository(Handler mainHandler) {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://192.168.8.168:3000")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        userService = retrofit.create(UserService.class);
+        this.mainHandler = mainHandler;
+    }
+
+    public LiveData<User> getUserData(int userId) {
+        MutableLiveData<User> userLiveData = new MutableLiveData<>();
+
+        userService.getUser(userId).enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                if (response.isSuccessful()) {
+                    User user = response.body();
+                    if (user != null) {
+                        mainHandler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                userLiveData.setValue(user);
+                            }
+                        });
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+                mainHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        userLiveData.postValue(new User(1, "Fail", "fail@gmail.com"));
+                    }
+                });
+                Log.d("E2", "API call Failed - onFailure");
+            }
+        });
+
+        return userLiveData;
+    }
+}
+
+
+/*
+public class UserRepository {
+
+    private UserService userService;
+    private Handler mainHandler;
+
+    public UserRepository() {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://192.168.8.168:3000")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        userService = retrofit.create(UserService.class);
+        mainHandler = new Handler(Looper.getMainLooper());
+    }
+
+    public LiveData<User> getUserData(int userId) {
+        MutableLiveData<User> userLiveData = new MutableLiveData<>();
+
+        userService.getUser(userId).enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                if (response.isSuccessful()) {
+                    User user = response.body();
+                    if (user != null) {
+                        mainHandler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                userLiveData.setValue(user);
+                            }
+                        });
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+                mainHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        userLiveData.postValue(new User(1, "Fail", "fail@gmail.com"));
+                    }
+                });
+                Log.d("E2", "API call Failed - onFailure");
+            }
+        });
+
+        return userLiveData;
+    }
+}
+
+*/
+/*
+public class UserRepository {
+
+    private Context context;
+    private UserService userService;
+
+    public UserRepository(Context context) {
+        this.context = context;
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://192.168.8.168:3000") // Replace with your API base URL
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        userService = retrofit.create(UserService.class);
+    }
+
+    public LiveData<User> getUserData(int userId) {
+        MutableLiveData<User> userLiveData = new MutableLiveData<>();
+
+        userService.getUser(userId).enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                if (response.isSuccessful()) {
+                    User user = response.body();
+                    if (user != null) {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                userLiveData.setValue(user);
+                            }
+                        });
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+                userLiveData.postValue(new User(1, "Fail", "fail@gmail.com"));
+                Log.d("E2", "API call Failed - onFailure");
+            }
+        });
+
+        return userLiveData;
+    }
+}
+*/
+
+/*
+public class UserRepository {
+
+    private UserService userService;
+
+    public UserRepository() {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://192.168.8.168:3000") // Replace with your API base URL
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        userService = retrofit.create(UserService.class);
+        Log.d("E4", "4");
+    }
+
+    public LiveData<User> getUserData(int userId) {
+        MutableLiveData<User> userLiveData = new MutableLiveData<>();
+
+        userService.getUser(userId).enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                if (response.isSuccessful()) {
+                    User user = response.body();
+                    if (user != null) {
+                        Log.d("E1", "ID: " + user.getId());
+                        Log.d("E1", "Name: " + user.getName());
+                        Log.d("E1", "Email: " + user.getEmail());
+
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                userLiveData.setValue(user);
+                            }
+                        });
+                    }
+
+                    String requestUrl = call.request().url().toString();
+                    Log.d("API_Url->", "API URL: " + requestUrl);
+                    Log.d("API_Response", "Response: " + response.toString());
+                    Log.d("E1","This means API call is Successful");
+                } else {
+                    Log.d("E0","API call failed");
+                }
+            }
+
+
+            /*
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                if (response.isSuccessful()) {
+                    User user = response.body(); // Access the user object directly
+                    if (user != null) {
+                        Log.d("E1", "ID: " + user.getId());
+                        Log.d("E1", "Name: " + user.getName());
+                        Log.d("E1", "Email: " + user.getEmail());
+                        userLiveData.setValue(user);
+                    }
+
+                    String requestUrl = call.request().url().toString();
+                    Log.d("API_Url->", "API URL: " + requestUrl);
+                    Log.d("API_Response", "Response: " + response.toString());
+                    Log.d("E1", "This means the API call is Successful");
+                } else {
+                    Log.d("E0", "API call failed");
+                }
+            }
+
+
+
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+                userLiveData.postValue(new User(1, "Fail", "fail@gmail.com"));
+                Log.d("E2", "API call Failed - onFailure");
+            }
+        });
+
+        return userLiveData;
+    }
+
+}
+*/
+/*
+public class UserRepository {
+
+    private UserService userService;
+
+    public UserRepository() {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://192.168.8.168:3000") // Replace with your API base URL
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        userService = retrofit.create(UserService.class);
+        Log.d("E4","4");
+    }
+
+    public LiveData<User> getUserData(int userId) {
+        MutableLiveData<User> userLiveData = new MutableLiveData<>();
+
+        userService.getUser(userId).enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                if (response.isSuccessful()) {
+                    User user = response.body();
+                    if (user != null) {
+                        // Log the values from the User object
+                        Log.d("E1", "ID: " + user.getId());
+                        Log.d("E1", "Name: " + user.getName());
+                        Log.d("E1", "Email: " + user.getEmail());
+
+                        // Set the value in the LiveData
+                        userLiveData.setValue(user);
+                    }
+
+                    // Get the request URL from the original request
+                    String requestUrl = call.request().url().toString();
+                    Log.d("API_Url->", "API URL: " + requestUrl);
+                    Log.d("API_Response", "Response: " + response.toString());
+                    Log.d("E1","This means Api call is Successful");
+                } else {
+                    Log.d("E0","Api call failed");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+                // Handle failure
+                userLiveData.postValue(new User(1, "Fail", "fail@gmail.com"));
+                Log.d("E2","Api call Failed - onfailure");
+            }
+        });
+
+        return userLiveData;
+    }
+*/
+    /*
+    public LiveData<User> getUserData(int userId) {
+        MutableLiveData<User> userLiveData = new MutableLiveData<>();
+
+        userService.getUser(userId).enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                if (response.isSuccessful()) {
+
+                    //userLiveData.setValue(response.body());
+                    User user = response.body();
+                    if (user != null) {
+                        // Log the values from the User object
+                        Log.d("E1", "ID: " + user.getId());
+                        Log.d("E1", "Name: " + user.getName());
+                        Log.d("E1", "Email: " + user.getEmail());
+
+                        // Set the value in the LiveData
+                        userLiveData.setValue(user);
+
+                    // Get the request URL from the original request
+                    String requestUrl = call.request().url().toString();
+                    Log.d("API_Url->", "API URL: " + requestUrl);
+                    Log.d("API_Response", "Response: " + response.toString());
+                    Log.d("E1","This means Api call is Successful");
+                }}
+                else {
+                    Log.d("E0","Api call failed");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+                // Handle failure
+                userLiveData.postValue(new User(1, "Fail", "fail@gmail.com"));
+                Log.d("E2","Api call Failed - onfailure");
+            }
+        });
+        Log.d("E3","3");
+        return userLiveData;
+
+    }
+
+
+}
+*/
+/*
 public class UserRepository {
 
     private MutableLiveData<User> userLiveData;
@@ -51,7 +389,7 @@ public class UserRepository {
     }
 }
 
-
+*/
 /*
 public class UserRepository {
 

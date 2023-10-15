@@ -11,6 +11,7 @@ import android.os.Bundle;
 
 import au.com.softclient.livedata1.databinding.ActivityMainBinding;
 import au.com.softclient.livedata1.models.User;
+import au.com.softclient.livedata1.repository.UserRepository;
 import au.com.softclient.livedata1.viewmodels.UserViewModel;
 
 //package au.com.softclient.livedata1;
@@ -40,15 +41,164 @@ import au.com.softclient.livedata1.viewmodels.UserViewModel;
 //package com.yourpackage;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.Observer;
+import android.os.Handler;
+import android.os.Looper;
 
 //import com.yourpackage.models.User;
 //import com.yourpackage.viewmodels.UserViewModel;
 
+
+// MainActivity.java
+
+
+public class MainActivity extends AppCompatActivity {
+
+    private UserViewModel userViewModel;
+    private TextView nameTextView;
+    private TextView emailTextView;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        nameTextView = findViewById(R.id.userNameTextView);
+        emailTextView = findViewById(R.id.userEmailTextView);
+
+        userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
+
+        // Create a handler for the main thread
+        final Handler mainHandler = new Handler(Looper.getMainLooper());
+
+        // Pass the handler to the repository
+        UserRepository userRepository = new UserRepository(mainHandler);
+
+        userViewModel.getUserData(1, userRepository).observe(this, new Observer<User>() {
+            @Override
+            public void onChanged(User user) {
+                if (user != null) {
+                    nameTextView.setText(user.getName());
+                    emailTextView.setText(user.getEmail());
+                    Log.d("EA1", user.getName() + " Activity error " + user.getEmail());
+                }
+            }
+        });
+    }
+}
+
+
+/*
+public class MainActivity extends AppCompatActivity {
+
+    private UserViewModel userViewModel;
+    private TextView nameTextView;
+    private TextView emailTextView;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        nameTextView = findViewById(R.id.userNameTextView);
+        emailTextView = findViewById(R.id.userEmailTextView);
+
+        userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
+
+        userViewModel.getUserData(1).observe(this, new Observer<User>() {
+            @Override
+            public void onChanged(User user) {
+                if (user != null) {
+                    nameTextView.setText(user.getName());
+                    emailTextView.setText(user.getEmail());
+                    Log.d("EA1", user.getName() + " Activity error " + user.getEmail());
+                }
+            }
+        });
+    }
+}
+
+*/
+
+/*
+public class MainActivity extends AppCompatActivity {
+
+    private UserViewModel userViewModel;
+    private TextView nameTextView;
+    private TextView emailTextView;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        nameTextView = findViewById(R.id.userNameTextView);
+        emailTextView = findViewById(R.id.userEmailTextView);
+
+        userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
+
+        userViewModel.getUserData(1).observe(this, new Observer<User>() {
+            @Override
+            public void onChanged(User user) {
+                if (user != null) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            nameTextView.setText(user.getName());
+                            emailTextView.setText(user.getEmail());
+                            Log.d("EA1", user.getName() + "Activity error" + user.getEmail());
+                        }
+                    });
+                }
+            }
+        });
+    }
+}
+*/
+
+/*
+public class MainActivity extends AppCompatActivity {
+
+    private UserViewModel userViewModel;
+    private TextView nameTextView;
+    private TextView emailTextView;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        nameTextView = findViewById(R.id.userNameTextView);
+        emailTextView = findViewById(R.id.userEmailTextView);
+
+        userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
+
+        userViewModel.getUserData(1).observe(this, new Observer<User>() {
+            @Override
+            public void onChanged(User user) {
+                if (user != null) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            nameTextView.setText(user.getName());
+                            emailTextView.setText(user.getEmail());
+                            Log.d("EA1",user.getName()+"Activity error"+user.getEmail());
+                        }
+                    });
+                }
+            }
+        });
+    }
+}
+
+*/
+
+/*
 public class MainActivity extends AppCompatActivity {
 
     private UserViewModel userViewModel;
@@ -70,6 +220,23 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onChanged(User user) {
                 if (user != null) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            nameTextView.setText(user.getName());
+                            emailTextView.setText(user.getEmail());
+                            Log.d("EA1",user.getName()+"Activity error"+user.getEmail());
+                        }
+                    });
+                }
+            }
+        });
+*/
+        /*
+        userViewModel.getUserData(1).observe(this, new Observer<User>() {
+            @Override
+            public void onChanged(User user) {
+                if (user != null) {
                     nameTextView.setText(user.getName());
                     emailTextView.setText(user.getEmail());
                 }
@@ -77,7 +244,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 }
-
+*/
 
 /*
 public class MainActivity extends AppCompatActivity {

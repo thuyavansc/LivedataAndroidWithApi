@@ -1,4 +1,6 @@
 package au.com.softclient.livedata1.models;
+import com.google.gson.annotations.SerializedName;
+
 
 /*
 public class User {
@@ -24,9 +26,22 @@ public class User {
 */
 
 public class User {
+
+    @SerializedName("id")
+    private int id;
+
+    @SerializedName("name")
+    private String name;
+
+    @SerializedName("email")
+    private String email;
+
+    /*
     private int id;
     private String name;
     private String email;
+    */
+
 
     public User(int id, String name, String email) {
         this.id = id;
